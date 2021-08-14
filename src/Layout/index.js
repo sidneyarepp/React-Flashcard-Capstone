@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import AddCard from './AddCard';
+import { Switch, Route } from "react-router-dom";
+import { listDecks } from '../utils/api/index';
+import AddOrEditCard from './AddOrEditCard';
 import CardList from "./CardList";
 import CreateDeck from './CreateDeck';
 import EditCard from "./EditCard";
@@ -8,13 +10,16 @@ import DisplayDeckCards from "./DisplayDeckCards";
 import DisplayStudyDeck from "./DisplayStudyDeck";
 import Header from "./Header";
 import NotFound from "./NotFound";
-import { Switch, Route } from "react-router-dom";
-import { listDecks } from '../utils/api/index';
 
 function Layout() {
 
+  const [cards, setCards] = useState([]);
+  const [cardInformation, setCardInformation] = useState({ front: '', back: '' });
+  const [cardSide, setCardSide] = useState('front');
+  const [createDeckForm, setCreateDeckForm] = useState({ name: '', description: '' });
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [decks, setDecks] = useState([]);
-  const [deckInfo, setDeckInfo] = useState({});
+  const [deckData, setDeckData] = useState({ name: '', description: '' });
 
   useEffect(() => {
     const { signal, abort } = new AbortController();
@@ -40,22 +45,22 @@ function Layout() {
             <CardList decks={decks} setDecks={setDecks} />
           </Route>
           <Route path='/decks/new'>
-            <CreateDeck />
+            <CreateDeck createDeckForm={createDeckForm} setCreateDeckForm={setCreateDeckForm} />
           </Route>
           <Route path='/decks/:deckId' exact>
-            <DisplayDeckCards />
+            <DisplayDeckCards cards={cards} setCards={setCards} deckData={deckData} setDeckData={setDeckData} />
           </Route>
           <Route path='/decks/:deckId/edit'>
-            <EditDeck setDeckInfo={setDeckInfo} />
+            <EditDeck deckData={deckData} setDeckData={setDeckData} />
           </Route>
           <Route path='/decks/:deckId/study'>
-            <DisplayStudyDeck />
+            <DisplayStudyDeck cardSide={cardSide} setCardSide={setCardSide} deckData={deckData} setDeckData={setDeckData} cards={cards} setCards={setCards} cardInformation={cardInformation} setCardInformation={setCardInformation} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} />
           </Route>
           <Route path='/decks/:deckId/cards/:cardId/edit'>
-            <EditCard />
+            <EditCard cardInformation={cardInformation} setCardInformation={setCardInformation} deckData={deckData} setDeckData={setDeckData} />
           </Route>
           <Route path='/decks/:deckId/cards/new'>
-            <AddCard />
+            <AddOrEditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} />
           </Route>
           <Route>
             <NotFound />

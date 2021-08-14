@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { readDeck, updateDeck } from '../utils/api';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 
-function EditDeck({ setDeckInfo }) {
+function EditDeck({ deckData, setDeckData }) {
 
-    const [deckData, setDeckData] = useState({ name: '', description: '' });
     const { deckId } = useParams();
     const history = useHistory();
 
@@ -21,7 +20,7 @@ function EditDeck({ setDeckInfo }) {
             }
         })
         return () => abort;
-    }, [deckId])
+    }, [deckId, setDeckData])
 
     function handleChange(e) {
         setDeckData({ ...deckData, [e.target.name]: e.target.value })
@@ -31,7 +30,7 @@ function EditDeck({ setDeckInfo }) {
         e.preventDefault();
         const { signal } = new AbortController();
 
-        updateDeck(deckData, signal).then(setDeckInfo(deckData)).then(history.push(`/decks/${deckId}`)).catch(error => {
+        updateDeck(deckData, signal).then(setDeckData(deckData)).then(history.push(`/decks/${deckId}`)).catch(error => {
             if (error.name === 'AbortError') {
                 console.log('Fetch Aborted');
             } else {

@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { readCard, readDeck, updateCard } from '../utils/api';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 
-function EditCard() {
-    const [deckInfo, setDeckInfo] = useState({});
-    const [cardInformation, setCardInformation] = useState({ front: '', back: '' });
+function EditCard({ cardInformation, setCardInformation, deckData, setDeckData }) {
+
     const { deckId, cardId } = useParams();
     const history = useHistory();
 
@@ -14,7 +13,7 @@ function EditCard() {
         const { signal, abort } = new AbortController();
 
         readDeck(deckId, signal)
-            .then(deckInformation => setDeckInfo(deckInformation))
+            .then(deckInformation => setDeckData(deckInformation))
             .catch(error => {
                 if (error.name === 'AbortError') {
                     console.log('Fetch Aborted');
@@ -35,7 +34,7 @@ function EditCard() {
 
 
         return () => abort;
-    }, [deckId, cardId])
+    }, [deckId, cardId, setCardInformation, setDeckData])
 
     function handleChange(e) {
         setCardInformation({ ...cardInformation, [e.target.name]: e.target.value });
@@ -50,7 +49,7 @@ function EditCard() {
 
     return (
         <div>
-            <p><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} >{deckInfo.name}</Link> / Edit Card {cardId}</p>
+            <p><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} >{deckData.name}</Link> / Edit Card {cardId}</p>
             <h1>Edit Card</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor='front'>Front</label>
