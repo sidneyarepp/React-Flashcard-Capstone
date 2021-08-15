@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import { listDecks } from '../utils/api/index';
-import AddOrEditCard from './AddOrEditCard';
+import AddCard from './AddCard';
 import CardList from "./CardList";
 import CreateDeck from './CreateDeck';
+import EditCard from './EditCard';
 import EditDeck from "./EditDeck";
 import DisplayDeckCards from "./DisplayDeckCards";
 import DisplayStudyDeck from "./DisplayStudyDeck";
@@ -39,9 +40,6 @@ function Layout() {
     return () => abort;
   }, [])
 
-  //The 'AddorEditCards' component is used for two separate routes.  To avoid duplication of listing the component and its props I created a single variable to hold them.
-  const addOrEditCardComponentAndProps = <AddOrEditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} />
-
   return (
     <section>
       <Header />
@@ -64,10 +62,10 @@ function Layout() {
             <DisplayStudyDeck cardSide={cardSide} setCardSide={setCardSide} deckData={deckData} setDeckData={setDeckData} cards={cards} setCards={setCards} cardInformation={cardInformation} setCardInformation={setCardInformation} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} />
           </Route>
           <Route path='/decks/:deckId/cards/:cardId/edit'>
-            {addOrEditCardComponentAndProps}
+            <EditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} />
           </Route>
           <Route path='/decks/:deckId/cards/new'>
-            {addOrEditCardComponentAndProps}
+            <AddCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} />
           </Route>
           <Route>
             <NotFound />
