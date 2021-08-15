@@ -28,12 +28,18 @@ function DisplayStudyDeck({ cardSide, setCardSide, deckData, setDeckData, cards,
         })
     }, [deckId, currentCardIndex, setCardInformation, setCards, setDeckData])
 
+    function handleLinkClick() {
+        setCardInformation({ front: '', back: '' });
+        setCurrentCardIndex(0);
+        setCardSide('front');
+    }
+
     return (
         <div>
-            <p><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`}>{deckData.name}</Link> / Study</p>
+            <p><Link to={'/'} onClick={handleLinkClick}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} onClick={handleLinkClick}>{deckData.name}</Link> / Study</p>
             <p>Study: {deckData.name}</p>
             {cards.length > 2 ?
-                <StudyCard deckData={deckData} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} cardInformation={cardInformation} cards={cards} history={history} cardSide={cardSide} setCardSide={setCardSide} />
+                <StudyCard deckData={deckData} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} cardInformation={cardInformation} cards={cards} history={history} cardSide={cardSide} setCardSide={setCardSide} setCardInformation={setCardInformation} />
                 :
                 <NotEnoughCards cardsQuantity={cards.length} />
             }

@@ -34,6 +34,8 @@ function Layout() {
     return () => abort;
   }, [])
 
+  const addOrEditCardComponentAndProps = <AddOrEditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} />
+
   return (
     <section>
       <Header />
@@ -56,10 +58,10 @@ function Layout() {
             <DisplayStudyDeck cardSide={cardSide} setCardSide={setCardSide} deckData={deckData} setDeckData={setDeckData} cards={cards} setCards={setCards} cardInformation={cardInformation} setCardInformation={setCardInformation} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} />
           </Route>
           <Route path='/decks/:deckId/cards/:cardId/edit'>
-            <AddOrEditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} />
+            {addOrEditCardComponentAndProps}
           </Route>
           <Route path='/decks/:deckId/cards/new'>
-            <AddOrEditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} />
+            {addOrEditCardComponentAndProps}
           </Route>
           <Route>
             <NotFound />

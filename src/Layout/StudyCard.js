@@ -1,6 +1,6 @@
 import React from 'react';
 
-function StudyCard({ deckData, currentCardIndex, setCurrentCardIndex, cards, cardInformation, history, cardSide, setCardSide }) {
+function StudyCard({ deckData, currentCardIndex, setCurrentCardIndex, cards, cardInformation, history, cardSide, setCardSide, setCardInformation }) {
 
     function handleCardFlip() {
         if (cardSide === 'front') {
@@ -20,6 +20,9 @@ function StudyCard({ deckData, currentCardIndex, setCurrentCardIndex, cards, car
                 setCurrentCardIndex(0);
                 setCardSide('front');
             } else {
+                setCardInformation({ front: '', back: '' });
+                setCurrentCardIndex(0);
+                setCardSide('front');
                 history.push('/')
             }
         }

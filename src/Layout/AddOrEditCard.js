@@ -4,7 +4,7 @@ import { readDeck, readCard, createCard, updateCard } from '../utils/api';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 
-function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformation }) {
+function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformation, setCurrentCardIndex, setCardSide }) {
 
     const { deckId, cardId } = useParams();
     const { url } = useRouteMatch();
@@ -79,13 +79,19 @@ function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformat
         history.push(`/decks/${deckId}`);
     }
 
+    function handleLinkClick() {
+        setCardInformation({ front: '', back: '' });
+        setCurrentCardIndex(0);
+        setCardSide('front');
+    }
+
     return (
         url.includes('new')
 
             ?
 
             <div>
-                <p><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} >{deckData.name}</Link> / <span>Add Card</span></p>
+                <p><Link to={'/'} onClick={handleLinkClick}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} onClick={handleLinkClick}>{deckData.name}</Link> / <span>Add Card</span></p>
                 <h2>{deckData.name}: <span>Add Card</span></h2>
                 <form onSubmit={handleSubmitAddCard}>
                     <label htmlFor='front'>Front</label>
@@ -100,7 +106,7 @@ function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformat
             :
 
             <div>
-                <p><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} >{deckData.name}</Link> / Edit Card {cardId}</p>
+                <p><Link to={'/'} onClick={handleLinkClick}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} onClick={handleLinkClick}>{deckData.name}</Link> / Edit Card {cardId}</p>
                 <h1>Edit Card</h1>
                 <form onSubmit={handleSubmitEditCard}>
                     <label htmlFor='front'>Front</label>
