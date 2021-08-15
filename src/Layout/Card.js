@@ -8,6 +8,7 @@ function Card({ deck, deleteDeckInState }) {
   const { id, name, description, cards } = deck;
   const { signal } = new AbortController();
 
+  //Delete handler for if/when the customer clicks on the delete button on the home page.
   function handleDelete() {
     const result = window.confirm("Delete this deck?\n\nYou will not be able to recover it.");
     if (result) {

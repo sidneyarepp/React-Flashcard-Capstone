@@ -9,22 +9,27 @@ function CardList({ decks, setDecks }) {
 
   const history = useHistory();
 
+  //This sets the decks state to be all of the decks found in the database.
   useEffect(() => {
     const signal = new AbortController().signal;
 
-    listDecks(signal).then(deckInformation => setDecks(deckInformation)).catch(error => {
-      if (error.name === 'AbortError') {
-        console.log('Fetch Aborted')
-      } else {
-        throw error
-      }
-    })
+    listDecks(signal)
+      .then(decksInformation => setDecks(decksInformation))
+      .catch(error => {
+        if (error.name === 'AbortError') {
+          console.log('Fetch Aborted')
+        } else {
+          throw error
+        }
+      })
   }, [setDecks])
 
+  //Handler for when the user clicks on the 'Create Deck' button.
   function handleCreateClick() {
     history.push('/decks/new')
   }
 
+  //Handler to delete the deck in state the customer chooses to delete.  This triggers a re-render to update the card list.
   function deleteDeckInState(id) {
     setDecks(decks.filter(deck => deck.id !== id))
   }
