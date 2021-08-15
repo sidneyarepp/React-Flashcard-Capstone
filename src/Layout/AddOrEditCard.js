@@ -4,6 +4,7 @@ import { readDeck, readCard, createCard, updateCard } from '../utils/api';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 
+//This component handles the Add Card and Edit Card functionality.
 function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformation, setCurrentCardIndex, setCardSide }) {
 
     const { deckId, cardId } = useParams();
@@ -98,15 +99,17 @@ function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformat
             ?
             //This is what is rendered if the customer is adding a new card.
             <div>
-                <p><Link to={'/'} onClick={handleLinkClick}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} onClick={handleLinkClick}>{deckData.name}</Link> / <span>Add Card</span></p>
-                <h2>{deckData.name}: <span>Add Card</span></h2>
-                <form onSubmit={handleSubmitAddCard}>
-                    <label htmlFor='front'>Front</label>
-                    <textarea type='text' name='front' id='front' value={cardInformation.front} onChange={handleChange} />
-                    <label htmlFor='back'>Back</label>
-                    <textarea type='text' name='back' id='back' value={cardInformation.back} onChange={handleChange} />
-                    <button onClick={handleDoneAndCancelButtons} className='btn btn-secondary'>Done</button>
-                    <button type='submit' className='btn btn-primary'>Save</button>
+                <p className="bg-light p-2 rounded"><Link to={'/'} onClick={handleLinkClick}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} onClick={handleLinkClick}>{deckData.name}</Link> / <span>Add Card</span></p>
+                <h1 className="mb-3">{deckData.name}: <span>Add Card</span></h1>
+                <form onSubmit={handleSubmitAddCard} className="border p-4 rounded">
+                    <label htmlFor='front' className="form-label">Front</label>
+                    <textarea type='text' className="form-control" name='front' id='front' value={cardInformation.front} onChange={handleChange} />
+                    <label htmlFor='back' className="form-label">Back</label>
+                    <textarea type='text' className="form-control" name='back' id='back' value={cardInformation.back} onChange={handleChange} />
+                    <div className="mt-3">
+                        <button onClick={handleDoneAndCancelButtons} className='btn btn-secondary'>Done</button>
+                        <button type='submit' className='btn btn-primary ml-2'>Save</button>
+                    </div>
                 </form>
             </div>
 
@@ -114,15 +117,17 @@ function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformat
 
             //This is what is rendered if the customer is editing an existing card.
             <div>
-                <p><Link to={'/'} onClick={handleLinkClick}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} onClick={handleLinkClick}>{deckData.name}</Link> / Edit Card {cardId}</p>
-                <h1>Edit Card</h1>
-                <form onSubmit={handleSubmitEditCard}>
-                    <label htmlFor='front'>Front</label>
-                    <textarea type='text' name='front' id='front' value={cardInformation.front} onChange={handleChange} />
-                    <label htmlFor='back'>Back</label>
-                    <textarea type='text' name='back' id='back' value={cardInformation.back} onChange={handleChange} />
-                    <button onClick={handleDoneAndCancelButtons} className='btn btn-secondary'>Cancel</button>
-                    <button type='submit' className='btn btn-primary'>Submit</button>
+                <p className="bg-light p-2 rounded"><Link to={'/'} onClick={handleLinkClick}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} onClick={handleLinkClick}>{deckData.name}</Link> / Edit Card {cardId}</p>
+                <h1 className="mb-3">Edit Card</h1>
+                <form onSubmit={handleSubmitEditCard} className="border p-4 rounded">
+                    <label htmlFor='front' className="form-label">Front</label>
+                    <textarea type='text' className="form-control" name='front' id='front' value={cardInformation.front} onChange={handleChange} />
+                    <label htmlFor='back' className="form-label mt-2">Back</label>
+                    <textarea type='text' className="form-control" name='back' id='back' value={cardInformation.back} onChange={handleChange} />
+                    <div className="mt-3">
+                        <button onClick={handleDoneAndCancelButtons} className='btn btn-secondary'>Cancel</button>
+                        <button type='submit' className='btn btn-primary ml-2'>Submit</button>
+                    </div>
                 </form>
             </div>
 

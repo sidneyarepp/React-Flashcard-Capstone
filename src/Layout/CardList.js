@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
+//This component handles loading the home page decks found in the database.
 function CardList({ decks, setDecks }) {
 
   const history = useHistory();
@@ -37,12 +38,12 @@ function CardList({ decks, setDecks }) {
   return (
     <div className="d-flex flex-column">
       <div className="d-flex flex-row">
-        <button className="btn btn-lg btn-secondary mb-2" onClick={handleCreateClick}>
+        <button className="btn btn-lg btn-secondary mb-3" onClick={handleCreateClick}>
           <FontAwesomeIcon icon={faPlus} /> Create Deck
         </button>
       </div>
       {decks.map((deck) => (
-        <div className="d-flex flex-row mb-2" key={deck.id}>
+        <div className="d-flex flex-row mb-3" key={deck.id}>
           <Card
             deleteDeckInState={deleteDeckInState}
             deck={deck}

@@ -1,5 +1,6 @@
 import React from "react";
 
+//Component initially provided by Thinkful to display a header.
 function Header() {
   return (
     <header className="jumbotron bg-dark">

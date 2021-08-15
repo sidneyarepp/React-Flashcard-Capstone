@@ -10,6 +10,8 @@ import DisplayStudyDeck from "./DisplayStudyDeck";
 import Header from "./Header";
 import NotFound from "./NotFound";
 
+
+//This component holds all of the universal state, as well as the routing logic.
 function Layout() {
 
   const [cards, setCards] = useState([]);
@@ -20,20 +22,24 @@ function Layout() {
   const [decks, setDecks] = useState([]);
   const [deckData, setDeckData] = useState({ name: '', description: '' });
 
+  //When the user visits the site home page the decks state is set to all decks currently found in the database.
   useEffect(() => {
     const { signal, abort } = new AbortController();
 
-    listDecks(signal).then(decksData => setDecks(decksData)).catch(error => {
-      if (error.name === 'AbortError') {
-        console.log('Fetch Aborted');
-      } else {
-        throw error;
-      }
-    })
+    listDecks(signal)
+      .then(decksData => setDecks(decksData))
+      .catch(error => {
+        if (error.name === 'AbortError') {
+          console.log('Fetch Aborted');
+        } else {
+          throw error;
+        }
+      })
 
     return () => abort;
   }, [])
 
+  //The 'AddorEditCards' component is used for two separate routes.  To avoid duplication of listing the component and its props I created a single variable to hold them.
   const addOrEditCardComponentAndProps = <AddOrEditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} />
 
   return (

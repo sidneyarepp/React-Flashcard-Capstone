@@ -4,6 +4,7 @@ import { deleteDeck } from "../utils/api/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faEye, faBook } from "@fortawesome/free-solid-svg-icons";
 
+//This is a sub-component of the CardList component.
 function Card({ deck, deleteDeckInState }) {
   const { id, name, description, cards } = deck;
   const { signal } = new AbortController();
@@ -12,18 +13,20 @@ function Card({ deck, deleteDeckInState }) {
   function handleDelete() {
     const result = window.confirm("Delete this deck?\n\nYou will not be able to recover it.");
     if (result) {
-      deleteDeck(id, signal).then(deleteDeckInState(id)).catch(error => {
-        if (error.name === 'AbortError') {
-          console.log('Fetch Aborted')
-        } else {
-          throw error
-        }
-      })
+      deleteDeck(id, signal)
+        .then(deleteDeckInState(id))
+        .catch(error => {
+          if (error.name === 'AbortError') {
+            console.log('Fetch Aborted')
+          } else {
+            throw error
+          }
+        })
     }
   }
 
   return (
-    <div className="card" style={{ width: "30em" }}>
+    <div className="card" style={{ width: "30rem" }}>
       <div className="card-body">
         <div className="row">
           <h5 className="card-title col col-9">{name}</h5>

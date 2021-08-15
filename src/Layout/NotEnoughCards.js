@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
+//This component is a sub-component of the 'DisplayStudyDeck' component.  It is rendered if the user tries to study a deck with less than 3 cards in it. 
 function NotEnoughCards({ cardsQuantity }) {
 
     const { deckId } = useParams();
