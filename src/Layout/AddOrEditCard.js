@@ -1,32 +1,58 @@
 import React, { useEffect } from 'react';
-import { readDeck, createCard } from '../utils/api';
-import { useParams, Link } from 'react-router-dom';
+import { Link, useParams, useHistory, useRouteMatch } from 'react-router-dom';
+import { readDeck, readCard, createCard, updateCard } from '../utils/api';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformation }) {
 
-    const { deckId } = useParams();
+    const { deckId, cardId } = useParams();
+    const { url } = useRouteMatch();
+    const history = useHistory();
 
     useEffect(() => {
         const { signal, abort } = new AbortController();
 
-        readDeck(deckId, signal).then(deckInformation => setDeckData(deckInformation)).catch(error => {
-            if (error.name === 'AbortError') {
-                console.log('Fetch Aborted');
-            } else {
-                throw error;
-            }
-        })
+        if (url.includes('new')) {
+            readDeck(deckId, signal)
+                .then(deckInformation => setDeckData(deckInformation))
+                .catch(error => {
+                    if (error.name === 'AbortError') {
+                        console.log('Fetch Aborted');
+                    } else {
+                        throw error;
+                    }
+                })
+        } else {
+            readDeck(deckId, signal)
+                .then(deckInformation => setDeckData(deckInformation))
+                .catch(error => {
+                    if (error.name === 'AbortError') {
+                        console.log('Fetch Aborted');
+                    } else {
+                        throw error;
+                    }
+                })
+
+            readCard(cardId, signal)
+                .then(cardData => setCardInformation(cardData))
+                .catch(error => {
+                    if (error.name === 'AbortError') {
+                        console.log('Fetch Aborted');
+                    } else {
+                        throw error;
+                    }
+                })
+        }
 
         return () => abort;
-    }, [deckId, setDeckData])
+    }, [deckId, cardId, setCardInformation, setDeckData, url])
 
     function handleChange(e) {
         setCardInformation({ ...cardInformation, [e.target.name]: e.target.value });
     }
 
-    function handleSubmit(e) {
+    function handleSubmitAddCard(e) {
         e.preventDefault();
         const { signal } = new AbortController();
 
@@ -40,19 +66,53 @@ function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformat
         setCardInformation({ front: '', back: '' })
     }
 
+    function handleSubmitEditCard(e) {
+        e.preventDefault();
+        updateCard(cardInformation)
+            .then(setCardInformation({ front: '', back: '' }))
+            .then(history.push(`/decks/${deckId}`))
+    }
+
+    function handleDoneAndCancelButtons(e) {
+        e.preventDefault();
+        setCardInformation({ front: '', back: '' });
+        history.push(`/decks/${deckId}`);
+    }
+
     return (
-        <div>
-            <p><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} >{deckData.name}</Link> / <span>Add Card</span></p>
-            <h2>{deckData.name}: <span>Add Card</span></h2>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor='front'>Front</label>
-                <textarea type='text' name='front' id='front' value={cardInformation.front} onChange={handleChange} />
-                <label htmlFor='back'>Back</label>
-                <textarea type='text' name='back' id='back' value={cardInformation.back} onChange={handleChange} />
-                <Link to={`/decks/${deckId}`} className='btn btn-secondary'>Done</Link>
-                <button type='submit' className='btn btn-primary'>Save</button>
-            </form>
-        </div>
+        url.includes('new')
+
+            ?
+
+            <div>
+                <p><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} >{deckData.name}</Link> / <span>Add Card</span></p>
+                <h2>{deckData.name}: <span>Add Card</span></h2>
+                <form onSubmit={handleSubmitAddCard}>
+                    <label htmlFor='front'>Front</label>
+                    <textarea type='text' name='front' id='front' value={cardInformation.front} onChange={handleChange} />
+                    <label htmlFor='back'>Back</label>
+                    <textarea type='text' name='back' id='back' value={cardInformation.back} onChange={handleChange} />
+                    <button onClick={handleDoneAndCancelButtons} className='btn btn-secondary'>Done</button>
+                    <button type='submit' className='btn btn-primary'>Save</button>
+                </form>
+            </div>
+
+            :
+
+            <div>
+                <p><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} >{deckData.name}</Link> / Edit Card {cardId}</p>
+                <h1>Edit Card</h1>
+                <form onSubmit={handleSubmitEditCard}>
+                    <label htmlFor='front'>Front</label>
+                    <textarea type='text' name='front' id='front' value={cardInformation.front} onChange={handleChange} />
+                    <label htmlFor='back'>Back</label>
+                    <textarea type='text' name='back' id='back' value={cardInformation.back} onChange={handleChange} />
+                    <button onClick={handleDoneAndCancelButtons} className='btn btn-secondary'>Cancel</button>
+                    <button type='submit' className='btn btn-primary'>Submit</button>
+                </form>
+            </div>
+
+
     )
 }
 

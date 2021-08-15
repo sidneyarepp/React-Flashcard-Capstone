@@ -4,7 +4,6 @@ import { listDecks } from '../utils/api/index';
 import AddOrEditCard from './AddOrEditCard';
 import CardList from "./CardList";
 import CreateDeck from './CreateDeck';
-import EditCard from "./EditCard";
 import EditDeck from "./EditDeck";
 import DisplayDeckCards from "./DisplayDeckCards";
 import DisplayStudyDeck from "./DisplayStudyDeck";
@@ -57,7 +56,7 @@ function Layout() {
             <DisplayStudyDeck cardSide={cardSide} setCardSide={setCardSide} deckData={deckData} setDeckData={setDeckData} cards={cards} setCards={setCards} cardInformation={cardInformation} setCardInformation={setCardInformation} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} />
           </Route>
           <Route path='/decks/:deckId/cards/:cardId/edit'>
-            <EditCard cardInformation={cardInformation} setCardInformation={setCardInformation} deckData={deckData} setDeckData={setDeckData} />
+            <AddOrEditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} />
           </Route>
           <Route path='/decks/:deckId/cards/new'>
             <AddOrEditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} />
