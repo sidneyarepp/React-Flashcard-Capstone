@@ -8,24 +8,30 @@ function CreateDeck({ createDeckForm, setCreateDeckForm }) {
 
     const history = useHistory();
 
+
     function handleChange(e) {
         setCreateDeckForm({ ...createDeckForm, [e.target.name]: e.target.value });
     }
 
-    function handleCancel() {
+    function handleCancel(e) {
+        e.preventDefault();
+        setCreateDeckForm({ name: '', description: '' });
         history.push('/');
     }
 
     function handleSubmit(event) {
         const { signal } = new AbortController();
         event.preventDefault();
-        createDeck(createDeckForm, signal).then(history.push('/')).catch(error => {
-            if (error.name === 'AbortError') {
-                console.log('Fetch Cancelled');
-            } else {
-                throw error;
-            }
-        })
+        createDeck(createDeckForm, signal)
+            .then(setCreateDeckForm({ name: '', description: '' }))
+            .then(history.push('/'))
+            .catch(error => {
+                if (error.name === 'AbortError') {
+                    console.log('Fetch Cancelled');
+                } else {
+                    throw error;
+                }
+            })
     }
 
     return (
@@ -34,9 +40,9 @@ function CreateDeck({ createDeckForm, setCreateDeckForm }) {
             <h1>Create Deck</h1>
             <form>
                 <label htmlFor='name'>Name:</label>
-                <input type='text' id='name' name='name' value={createDeckForm} onChange={handleChange} />
+                <input type='text' id='name' name='name' value={createDeckForm.name} onChange={handleChange} />
                 <label htmlFor='description'>Description</label>
-                <textarea type='text' id='description' name='description' value={createDeckForm} onChange={handleChange} />
+                <textarea type='text' id='description' name='description' value={createDeckForm.description} onChange={handleChange} />
                 <button className='btn btn-secondary' onClick={handleCancel}>Cancel</button>
                 <button className='btn btn-primary' type='submit' onClick={handleSubmit}>Submit</button>
             </form>
