@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import AddAndEditCardForm from './AddAndEditCardForm';
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
 import { readDeck, readCard, updateCard } from '../utils/api';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 //This component handles the Add Card and Edit Card functionality.
-function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformation, setCurrentCardIndex, setCardSide }) {
+function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformation, handleDoneAndCancelButton, handleLinkClick, handleChange }) {
 
-    const { deckId, cardId } = useParams();
     const history = useHistory();
+    const { deckId, cardId } = useParams();
+    const { url } = useRouteMatch();
 
     //The useEffect will set the deck state to match the deckId, as well as setting the currentCard state so the front and back data will be pre-filled in the edit form.
-
     useEffect(() => {
         const { signal, abort } = new AbortController();
 
@@ -39,10 +38,6 @@ function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformat
         return () => abort;
     }, [deckId, setDeckData, setCardInformation, cardId])
 
-    //Change handler to make the form a controlled form.
-    function handleChange(e) {
-        setCardInformation({ ...cardInformation, [e.target.name]: e.target.value });
-    }
 
     //Submit handler for when the user is editing an existing deck.
     function handleSubmitEditCard(e) {
@@ -52,35 +47,9 @@ function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformat
             .then(history.push(`/decks/${deckId}`))
     }
 
-    //Click handler to reset the cardInformation state, currentCardIndex, and cardSide if the user chooses to navigate back to the deck or the home page using the breadcrumb links.
-    function handleLinkClick() {
-        setCardInformation({ front: '', back: '' });
-        setCurrentCardIndex(0);
-        setCardSide('front');
-    }
-
-    //Handler to reset the cardInformation state if a customer clicks the Cancel button when editing an existing card.
-    function handleCancelButton(e) {
-        e.preventDefault();
-        setCardInformation({ front: '', back: '' });
-        history.push(`/decks/${deckId}`);
-    }
 
     return (
-        <div>
-            <p className="bg-light p-2 rounded"><Link to={'/'} onClick={handleLinkClick}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} onClick={handleLinkClick}>{deckData.name}</Link> / Edit Card {cardId}</p>
-            <h1 className="mb-3">Edit Card</h1>
-            <form onSubmit={handleSubmitEditCard} className="border p-4 rounded">
-                <label htmlFor='front' className="form-label">Front</label>
-                <textarea type='text' className="form-control" name='front' id='front' value={cardInformation.front} onChange={handleChange} />
-                <label htmlFor='back' className="form-label mt-2">Back</label>
-                <textarea type='text' className="form-control" name='back' id='back' value={cardInformation.back} onChange={handleChange} />
-                <div className="mt-3">
-                    <button onClick={handleCancelButton} className='btn btn-secondary'>Cancel</button>
-                    <button type='submit' className='btn btn-primary ml-2'>Submit</button>
-                </div>
-            </form>
-        </div>
+        <AddAndEditCardForm deckData={deckData} cardInformation={cardInformation} handleDoneAndCancelButton={handleDoneAndCancelButton} handleLinkClick={handleLinkClick} handleChange={handleChange} deckId={deckId} cardId={cardId} handleSubmitEditCard={handleSubmitEditCard} url={url} />
     )
 }
 

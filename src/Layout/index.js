@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, useHistory } from "react-router-dom";
 import { listDecks } from '../utils/api/index';
 import AddCard from './AddCard';
 import CardList from "./CardList";
@@ -22,6 +22,7 @@ function Layout() {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [decks, setDecks] = useState([]);
   const [deckData, setDeckData] = useState({ name: '', description: '' });
+  const history = useHistory();
 
   //When the user visits the site home page the decks state is set to all decks currently found in the database.
   useEffect(() => {
@@ -39,6 +40,26 @@ function Layout() {
 
     return () => abort;
   }, [])
+
+
+  //Click handler to reset the cardInformation state, currentCardIndex, and cardSide if the user chooses to navigate back to the deck or the home page using the breadcrumb links.
+  function handleLinkClick() {
+    setCardInformation({ front: '', back: '' });
+    setCurrentCardIndex(0);
+    setCardSide('front');
+  }
+
+  //Change handler to make the form a controlled form.
+  function handleChange(e) {
+    setCardInformation({ ...cardInformation, [e.target.name]: e.target.value });
+  }
+
+  //Handler to reset the cardInformation state if a customer clicks the Done button when adding cards.
+  function handleDoneAndCancelButton(e, deckId) {
+    e.preventDefault();
+    setCardInformation({ front: '', back: '' });
+    history.push(`/decks/${deckId}`);
+  }
 
   return (
     <section>
@@ -59,13 +80,13 @@ function Layout() {
             <EditDeck deckData={deckData} setDeckData={setDeckData} />
           </Route>
           <Route path='/decks/:deckId/study'>
-            <DisplayStudyDeck cardSide={cardSide} setCardSide={setCardSide} deckData={deckData} setDeckData={setDeckData} cards={cards} setCards={setCards} cardInformation={cardInformation} setCardInformation={setCardInformation} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} />
+            <DisplayStudyDeck cardSide={cardSide} setCardSide={setCardSide} deckData={deckData} setDeckData={setDeckData} cards={cards} setCards={setCards} cardInformation={cardInformation} setCardInformation={setCardInformation} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} handleDoneAndCancelButton={handleDoneAndCancelButton} handleLinkClick={handleLinkClick} />
           </Route>
           <Route path='/decks/:deckId/cards/:cardId/edit'>
-            <EditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} />
+            <EditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} handleDoneAndCancelButton={handleDoneAndCancelButton} handleLinkClick={handleLinkClick} handleChange={handleChange} />
           </Route>
           <Route path='/decks/:deckId/cards/new'>
-            <AddCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} />
+            <AddCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} handleChange={handleChange} handleDoneAndCancelButton={handleDoneAndCancelButton} handleLinkClick={handleLinkClick} />
           </Route>
           <Route>
             <NotFound />
