@@ -4,7 +4,7 @@ import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
 import { readDeck, readCard, updateCard } from '../utils/api';
 
 //This component handles the Add Card and Edit Card functionality.
-function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformation, handleDoneAndCancelButton, handleLinkClick, handleChange }) {
+function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformation, handleDoneAndCancelButton, handleLinkClick, handleCardChange }) {
 
     const history = useHistory();
     const { deckId, cardId } = useParams();
@@ -49,7 +49,7 @@ function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformat
 
 
     return (
-        <AddAndEditCardForm deckData={deckData} cardInformation={cardInformation} handleDoneAndCancelButton={handleDoneAndCancelButton} handleLinkClick={handleLinkClick} handleChange={handleChange} deckId={deckId} cardId={cardId} handleSubmitEditCard={handleSubmitEditCard} url={url} />
+        <AddAndEditCardForm deckData={deckData} cardInformation={cardInformation} handleDoneAndCancelButton={handleDoneAndCancelButton} handleLinkClick={handleLinkClick} handleCardChange={handleCardChange} deckId={deckId} cardId={cardId} handleSubmitEditCard={handleSubmitEditCard} url={url} />
     )
 }
 

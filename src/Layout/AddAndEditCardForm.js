@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 
-function AddAndEditCardForm({ deckData, cardInformation, handleLinkClick, handleChange, handleDoneAndCancelButton, deckId, cardId, handleSubmitAddCard, handleSubmitEditCard, url }) {
+function AddAndEditCardForm({ deckData, cardInformation, handleLinkClick, handleCardChange, handleDoneAndCancelButton, deckId, cardId, handleSubmitAddCard, handleSubmitEditCard, url }) {
 
     function doneAndCancelClick(e) {
         handleDoneAndCancelButton(e, deckId)
@@ -17,9 +17,9 @@ function AddAndEditCardForm({ deckData, cardInformation, handleLinkClick, handle
             <h1 className="mb-3">{deckData.name}: <span>Add Card</span></h1>
             <form onSubmit={addingCard ? handleSubmitAddCard : handleSubmitEditCard} className="border p-4 rounded">
                 <label htmlFor='front' className="form-label">Front</label>
-                <textarea type='text' className="form-control" name='front' id='front' value={cardInformation.front} onChange={handleChange} />
+                <textarea type='text' className="form-control" name='front' id='front' value={cardInformation.front} onChange={handleCardChange} required />
                 <label htmlFor='back' className="form-label">Back</label>
-                <textarea type='text' className="form-control" name='back' id='back' value={cardInformation.back} onChange={handleChange} />
+                <textarea type='text' className="form-control" name='back' id='back' value={cardInformation.back} onChange={handleCardChange} required />
                 <div className="mt-3">
                     <button onClick={doneAndCancelClick} className='btn btn-secondary'>{addingCard ? 'Done' : 'Cancel'}</button>
                     <button type='submit' className='btn btn-primary ml-2'>{addingCard ? 'Save' : 'Submit'}</button>
