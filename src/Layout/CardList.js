@@ -10,7 +10,7 @@ function CardList({ decks, setDecks }) {
 
   const history = useHistory();
 
-  //This sets the decks state to be all of the decks found in the database.
+  //This sets the decks state in the "index" component to be all of the decks found in the database.
   useEffect(() => {
     const signal = new AbortController().signal;
 
@@ -25,12 +25,12 @@ function CardList({ decks, setDecks }) {
       })
   }, [setDecks])
 
-  //Handler for when the user clicks on the 'Create Deck' button.
+  //Handler for when the user clicks on the 'Create Deck' button on the home page.
   function handleCreateClick() {
     history.push('/decks/new')
   }
 
-  //Handler to delete the deck in state the customer chooses to delete.  This triggers a re-render to update the card list.
+  //Handler to delete the deck in state the customer chooses to delete.  This triggers a re-render to update the decks list on the home page.
   function deleteDeckInState(id) {
     setDecks(decks.filter(deck => deck.id !== id))
   }

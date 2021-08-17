@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useRouteMatch, useParams, useHistory } from 'react-router-dom';
 import { readDeck, deleteDeck } from '../utils/api';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,11 +6,26 @@ import { faPencilAlt, faTrashAlt, faBook, faPlus, faHome } from "@fortawesome/fr
 import DeckCard from './DeckCard';
 
 //This component displays the deck information and all of the cards in the deck when the user clicks the 'View' button on the home page.
-function DisplayDeckCards({ deckData, setDeckData, cards, setCards }) {
+function DisplayDeckCards({ deckData, setDeckData }) {
+
+    const [cards, setCards] = useState([]);
     const { id, name, description } = deckData;
     const history = useHistory();
     const { deckId } = useParams();
     const { url } = useRouteMatch();
+
+    //When the 'View' button is clicked for a deck the state 'deck' and 'cards' are updated to reflect the deck the user clicked the 'View' button for.
+    useEffect(() => {
+        const { signal, abort } = new AbortController();
+
+        readDeck(deckId, signal)
+            .then(data => {
+                setDeckData(data);
+                setCards(data.cards);
+            });
+
+        return () => abort;
+    }, [deckId, setCards, setDeckData])
 
     //Function to delete a card from the cards state.
     function deleteCardInState(id) {
@@ -32,19 +47,6 @@ function DisplayDeckCards({ deckData, setDeckData, cards, setCards }) {
         }
         return () => abort;
     }
-
-    //When the 'View' button is clicked for a deck the state 'deck' and 'cards' are updated to reflect the ceck the user clicked the 'View' button for.
-    useEffect(() => {
-        const { signal, abort } = new AbortController();
-
-        readDeck(deckId, signal)
-            .then(data => {
-                setDeckData(data);
-                setCards(data.cards);
-            });
-
-        return () => abort;
-    }, [deckId, setCards, setDeckData])
 
     return (
         <div>

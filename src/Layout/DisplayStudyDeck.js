@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { readDeck } from '../utils/api';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
@@ -7,12 +7,15 @@ import StudyCard from './StudyCard';
 import NotEnoughCards from './NotEnoughCards';
 
 //This component handles the rendering for when the user clicks the 'Study' button on the home page or view deck screens.
-function DisplayStudyDeck({ cardSide, setCardSide, deckData, setDeckData, cards, setCards, cardInformation, setCardInformation, currentCardIndex, setCurrentCardIndex }) {
+function DisplayStudyDeck({ deckData, setDeckData }) {
 
+    const [cards, setCards] = useState([]);
+    const [cardSide, setCardSide] = useState('front');
+    const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const { deckId } = useParams();
-    const history = useHistory();
+    const currentCard = cards[currentCardIndex]
 
-    //When the component is mounted the state deckData, cards, and cardInformation are set based on the deck the user chooses to study.  The inital card shown will always be the first in the deck.
+    //When the component is mounted the state deckData and cards are set based on the deck the user chooses to study.  The inital card shown will always be the first in the deck.
     useEffect(() => {
         const { signal } = new AbortController();
 
@@ -20,7 +23,6 @@ function DisplayStudyDeck({ cardSide, setCardSide, deckData, setDeckData, cards,
             .then(deckInformation => {
                 setDeckData(deckInformation);
                 setCards(deckInformation.cards);
-                setCardInformation(deckInformation.cards[currentCardIndex]);
             }
             )
             .catch(error => {
@@ -30,21 +32,14 @@ function DisplayStudyDeck({ cardSide, setCardSide, deckData, setDeckData, cards,
                     throw error
                 }
             })
-    }, [deckId, currentCardIndex, setCardInformation, setCards, setDeckData])
-
-    //Click handler for when the user clicks on any of the breadcrumb links to make sure the cardInformation state is reset in case someone needs to add a new card or edit an existing card.
-    function handleLinkClick() {
-        setCardInformation({ front: '', back: '' });
-        setCurrentCardIndex(0);
-        setCardSide('front');
-    }
+    }, [deckId, setCards, setDeckData])
 
     return (
         <div>
-            <p className="bg-light p-2 rounded"><Link to={'/'} onClick={handleLinkClick}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`} onClick={handleLinkClick}>{deckData.name}</Link> / Study</p>
+            <p className="bg-light p-2 rounded"><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / <Link to={`/decks/${deckId}`}>{deckData.name}</Link> / Study</p>
             <h1 className="mb-4">Study: {deckData.name}</h1>
             {cards.length > 2 ?
-                <StudyCard deckData={deckData} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} cardInformation={cardInformation} cards={cards} history={history} cardSide={cardSide} setCardSide={setCardSide} setCardInformation={setCardInformation} />
+                <StudyCard deckData={deckData} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} currentCard={currentCard} cards={cards} cardSide={cardSide} setCardSide={setCardSide} />
                 :
                 <NotEnoughCards cardsQuantity={cards.length} />
             }

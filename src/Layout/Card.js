@@ -4,12 +4,12 @@ import { deleteDeck } from "../utils/api/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faEye, faBook } from "@fortawesome/free-solid-svg-icons";
 
-//This is a sub-component of the CardList component.
+//This is a sub-component of the CardList component that handles the delete card functionality and the card structure.
 function Card({ deck, deleteDeckInState }) {
   const { id, name, description, cards } = deck;
   const { signal } = new AbortController();
 
-  //Delete handler for if/when the customer clicks on the delete button on the home page.
+  //Delete handler for if/when the customer clicks the delete button on a card on the home page.
   function handleDelete() {
     const result = window.confirm("Delete this deck?\n\nYou will not be able to recover it.");
     if (result) {

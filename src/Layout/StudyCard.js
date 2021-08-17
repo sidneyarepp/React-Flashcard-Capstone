@@ -1,7 +1,11 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 //This is a sub-component of the 'DisplayStudyDeck' component.  It handles the styling and functionality of the cards.
-function StudyCard({ deckData, currentCardIndex, setCurrentCardIndex, cards, cardInformation, history, cardSide, setCardSide, setCardInformation }) {
+function StudyCard({ deckData, currentCardIndex, setCurrentCardIndex, cards, cardSide, setCardSide, currentCard }) {
+
+    const history = useHistory();
+    const cardsideFront = cardSide === 'front';
 
     //Handler for which side of the card is displayed when the user clicks the 'Flip' button.
     function handleCardFlip() {
@@ -23,39 +27,23 @@ function StudyCard({ deckData, currentCardIndex, setCurrentCardIndex, cards, car
                 setCurrentCardIndex(0);
                 setCardSide('front');
             } else {
-                setCardInformation({ front: '', back: '' });
-                setCurrentCardIndex(0);
-                setCardSide('front');
                 history.push('/')
             }
         }
     }
 
     //Conditional logic to handle the card rendering based on the state variable 'cardSide'.
-    if (cardSide === 'front') {
-        return (
-            <div className="card" style={{ width: "30rem" }}>
-                <div className="card-body">
-                    <h4>Card {currentCardIndex + 1} of {cards.length}</h4>
-                    <h5 className="card-title">{cardInformation.title}</h5>
-                    <p className="card-text">{cardInformation.front}</p>
-                    <button className="btn btn-secondary" onClick={handleCardFlip}>Flip</button>
-                </div>
+    return (
+        <div className="card" style={{ width: "30rem" }}>
+            <div className="card-body">
+                <h4>Card {currentCardIndex + 1} of {cards.length}</h4>
+                <p className="card-text">{cardsideFront ? currentCard.front : currentCard.back}</p>
+                <button className="btn btn-secondary" onClick={handleCardFlip}>Flip</button>
+                {!cardsideFront && <button className="btn btn-primary ml-2" onClick={handleNextCard}>Next</button>}
             </div>
-        )
-    } else {
-        return (
-            <div className="card" style={{ width: "30rem" }}>
-                <div className="card-body">
-                    <h4>Card {currentCardIndex + 1} of {deckData.cards.length}</h4>
-                    <h5 className="card-title">{cardInformation.title}</h5>
-                    <p className="card-text">{cardInformation.back}</p>
-                    <button className="btn btn-secondary" onClick={handleCardFlip}>Flip</button>
-                    <button className="btn btn-primary ml-2" onClick={handleNextCard}>Next</button>
-                </div>
-            </div>
-        )
-    }
+        </div>
+    )
+
 }
 
 export default StudyCard;

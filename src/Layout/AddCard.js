@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddAndEditCardForm from './AddAndEditCardForm';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { readDeck, createCard } from '../utils/api';
 
-//This component handles the Add Card functionality.
-function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformation, handleDoneAndCancelButton, handleLinkClick, handleCardChange }) {
+//This component handles the Add Card initial fetch and passes it down to the "AddAndEditCard" component.
+function AddCard() {
 
+    const [deckData, setDeckData] = useState({ name: '', description: '' })
+    const [cardInformation, setCardInformation] = useState({ front: '', back: '' })
     const { deckId } = useParams();
-    const { url } = useRouteMatch();
 
-    //The useEffect will set the deck state to match the deckId.  
+    //The useEffect will set the deck state in the "index" component to match the deckId.  That state is then utilized by the "AddAndEditCardForm" component.
     useEffect(() => {
         const { signal, abort } = new AbortController();
 
@@ -27,25 +28,27 @@ function AddOrEditCard({ deckData, setDeckData, cardInformation, setCardInformat
         return () => abort;
     }, [deckId, setDeckData])
 
-    //Submit handler for when the user is adding a new card to the deck.
-    function handleSubmitAddCard(e) {
+    function handleAddCardSubmit(e) {
         e.preventDefault();
-        const { signal } = new AbortController();
+        const { signal, abort } = new AbortController();
 
-        createCard(deckId, cardInformation, signal).then(setCardInformation({})).catch(error => {
-            if (error.name === 'AbortError') {
-                console.log('Fetch Cancelled');
-            } else {
-                throw error;
-            }
-        })
-        setCardInformation({ front: '', back: '' })
+        createCard(deckId, cardInformation, signal)
+            .then(
+                setCardInformation({ front: '', back: '' })
+            )
+            .catch(error => {
+                if (error.name === 'AbortError') {
+                    console.log('Fetch Cancelled');
+                } else {
+                    throw error;
+                }
+            })
+        return () => abort;
     }
 
-
     return (
-        <AddAndEditCardForm deckData={deckData} cardInformation={cardInformation} handleLinkClick={handleLinkClick} handleCardChange={handleCardChange} handleDoneAndCancelButton={handleDoneAndCancelButton} deckId={deckId} handleSubmitAddCard={handleSubmitAddCard} url={url} />
+        <AddAndEditCardForm deckData={deckData} cardInformation={cardInformation} setCardInformation={setCardInformation} handleAddCardSubmit={handleAddCardSubmit} />
     )
 }
 
-export default AddOrEditCard;
+export default AddCard;

@@ -4,12 +4,12 @@ import { deleteCard } from '../utils/api';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-//This is a sub-component of the DisplayDeckCards component.
+//This is a sub-component of the DisplayDeckCards component.  It handles the structure for the deck cards displayed on the "View" page.
 function DeckCard({ card, deleteCardInState }) {
     const { id, front, back } = card;
     const { url } = useRouteMatch();
 
-    //Handler for if the user chooses to delete a card from a deck.
+    //Handler for if the user chooses to delete a card from a deck on the "View" page.
     function handleDeleteCard() {
         const { signal } = new AbortController();
         const response = window.confirm('Delete this deck?\n\nYou will not be able to recover it.')

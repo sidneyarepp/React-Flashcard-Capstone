@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Switch, Route, useHistory } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import { listDecks } from '../utils/api/index';
 import AddCard from './AddCard';
 import CardList from "./CardList";
@@ -12,17 +12,11 @@ import Header from "./Header";
 import NotFound from "./NotFound";
 
 
-//This component holds all of the universal state, as well as the routing logic.
+//This component holds the routing logic and two pieces of universal state needed.
 function Layout() {
 
-  const [cards, setCards] = useState([]);
-  const [cardInformation, setCardInformation] = useState({ front: '', back: '' });
-  const [cardSide, setCardSide] = useState('front');
-  const [createDeckForm, setCreateDeckForm] = useState({ name: '', description: '' });
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [decks, setDecks] = useState([]);
   const [deckData, setDeckData] = useState({ name: '', description: '' });
-  const history = useHistory();
 
   //When the user visits the site home page the decks state is set to all decks currently found in the database.
   useEffect(() => {
@@ -41,53 +35,31 @@ function Layout() {
     return () => abort;
   }, [])
 
-
-  //Click handler to reset the createDeckForm, cardInformation state, currentCardIndex, and cardSide if the user chooses to navigate back to the deck or the home page using the breadcrumb links.
-  function handleLinkClick() {
-    setCreateDeckForm({ name: '', desctiption: '' });
-    setCardInformation({ front: '', back: '' });
-    setCurrentCardIndex(0);
-    setCardSide('front');
-  }
-
-  //Change handler to make the Add/Edit Card form a controlled form.
-  function handleCardChange(e) {
-    setCardInformation({ ...cardInformation, [e.target.name]: e.target.value });
-  }
-
-  //Handler to reset the cardInformation state if a customer clicks the Done button when adding cards, or Cancel button when editing cards.
-  function handleDoneAndCancelButton(e, deckId) {
-    e.preventDefault();
-    setCardInformation({ front: '', back: '' });
-    history.push(`/decks/${deckId}`);
-  }
-
   return (
     <section>
       <Header />
       <div className="container">
-        {/* TODO: Implement the screen starting here */}
         <Switch>
           <Route path='/' exact>
             <CardList decks={decks} setDecks={setDecks} />
           </Route>
           <Route path='/decks/new'>
-            <CreateDeck createDeckForm={createDeckForm} setCreateDeckForm={setCreateDeckForm} handleLinkClick={handleLinkClick} />
+            <CreateDeck />
           </Route>
           <Route path='/decks/:deckId' exact>
-            <DisplayDeckCards cards={cards} setCards={setCards} deckData={deckData} setDeckData={setDeckData} />
+            <DisplayDeckCards deckData={deckData} setDeckData={setDeckData} />
           </Route>
           <Route path='/decks/:deckId/edit'>
-            <EditDeck deckData={deckData} setDeckData={setDeckData} />
+            <EditDeck />
           </Route>
           <Route path='/decks/:deckId/study'>
-            <DisplayStudyDeck cardSide={cardSide} setCardSide={setCardSide} deckData={deckData} setDeckData={setDeckData} cards={cards} setCards={setCards} cardInformation={cardInformation} setCardInformation={setCardInformation} currentCardIndex={currentCardIndex} setCurrentCardIndex={setCurrentCardIndex} handleDoneAndCancelButton={handleDoneAndCancelButton} handleLinkClick={handleLinkClick} />
+            <DisplayStudyDeck deckData={deckData} setDeckData={setDeckData} />
           </Route>
           <Route path='/decks/:deckId/cards/:cardId/edit'>
-            <EditCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} handleDoneAndCancelButton={handleDoneAndCancelButton} handleLinkClick={handleLinkClick} handleCardChange={handleCardChange} />
+            <EditCard />
           </Route>
           <Route path='/decks/:deckId/cards/new'>
-            <AddCard deckData={deckData} setDeckData={setDeckData} cardInformation={cardInformation} setCardInformation={setCardInformation} setCurrentCardIndex={setCurrentCardIndex} setCardSide={setCardSide} handleCardChange={handleCardChange} handleDoneAndCancelButton={handleDoneAndCancelButton} handleLinkClick={handleLinkClick} />
+            <AddCard />
           </Route>
           <Route>
             <NotFound />
