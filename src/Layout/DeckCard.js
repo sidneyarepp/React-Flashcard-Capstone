@@ -12,7 +12,7 @@ function DeckCard({ card, deleteCardInState }) {
     //Handler for if the user chooses to delete a card from a deck on the "View" page.
     function handleDeleteCard() {
         const { signal } = new AbortController();
-        const response = window.confirm('Delete this deck?\n\nYou will not be able to recover it.')
+        const response = window.confirm('Delete this card?\n\nYou will not be able to recover it.')
         if (response) {
             deleteCard(id, signal).then(deleteCardInState(id)).catch(error => {
                 if (error.name === 'AbortError') {

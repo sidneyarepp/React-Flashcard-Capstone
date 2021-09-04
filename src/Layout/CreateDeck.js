@@ -9,13 +9,13 @@ import { createDeck } from '../utils/api/index';
 function CreateDeck() {
 
     const history = useHistory();
-    const [deckData, setDeckData] = useState({ name: '', description: '' })
+    const [formDeckData, setFormDeckData] = useState({ name: '', description: '' });
 
     function handleCreateSubmit(e) {
         e.preventDefault();
         const { signal, abort } = new AbortController();
 
-        createDeck(deckData, signal)
+        createDeck(formDeckData, signal)
             .then(history.push('/'))
             .catch(error => {
                 if (error.name === 'AbortError') {
@@ -32,7 +32,7 @@ function CreateDeck() {
         <div>
             <p className="bg-light p-2 rounded"><Link to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link> / Create Deck</p>
             <h1>Create Deck</h1>
-            <DeckForm deckData={deckData} setDeckData={setDeckData} handleCreateSubmit={handleCreateSubmit} />
+            <DeckForm formDeckData={formDeckData} setFormDeckData={setFormDeckData} handleCreateSubmit={handleCreateSubmit} />
         </div>
     )
 }

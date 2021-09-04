@@ -50,7 +50,7 @@ function Layout() {
             <DisplayDeckCards deckData={deckData} setDeckData={setDeckData} />
           </Route>
           <Route path='/decks/:deckId/edit'>
-            <EditDeck />
+            <EditDeck deckData={deckData} setDeckData={setDeckData} decks={decks} setDecks={setDecks} />
           </Route>
           <Route path='/decks/:deckId/study'>
             <DisplayStudyDeck deckData={deckData} setDeckData={setDeckData} />
